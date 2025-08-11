@@ -14,31 +14,68 @@ interface spi_if;
 
   // optional modport
   modport drv_mp(
-    output a_tb, b_tb, cin_tb,      // Driver drive DUT input
-    input clk_tb,                   // Driver need clock for timing
-    input sum_tb, cout_tb           // Driver read  DUT output
+    input   clk,
+    output  rst_n,
+    output  start,
+    output  tx_data,
+    input   rx_data,
+    input   busy,
+    input   done,
+    input   sclk,
+    input   mosi,
+    output  miso,
+    input   cs_n
   );
 
   modport mon_mp(
-    input clk_tb,                   // Monitor only read
-    input a_tb, b_tb, cin_tb,
-    input sum_tb, cout_tb
+    input clk,
+    input rst_n,
+    input start,
+    input tx_data,
+    input rx_data,
+    input busy,
+    input done,
+    input sclk,
+    input mosi,
+    input miso,
+    input cs_n
   );
 
-  clocking drv_cb @(posedge clk_tb);
+  clocking drv_cb @(posedge clk);
     default input #1step output #1;
-    input sum_tb, cout_tb;
-    output a_tb, b_tb, cin_tb;
+    input   clk,
+    output  rst_n,
+    output  start,
+    output  tx_data,
+    input   rx_data,
+    input   busy,
+    input   done,
+    input   sclk,
+    input   mosi,
+    output  miso,
+    input   cs_n
   endclocking
 
   clocking mon_cb @(posedge clk_tb);
     default input #1step output #1;
-    input sum_tb, cout_tb, a_tb, b_tb, cin_tb;
+    input clk,
+    input rst_n,
+    input start,
+    input tx_data,
+    input rx_data,
+    input busy,
+    input done,
+    input sclk,
+    input mosi,
+    input miso,
+    input cs_n
   endclocking
 
   task automatic init_tb();
-    a_tb    = 0;
-    b_tb    = 0;
-    cin_tb  = 0;
+    clk     = 0;
+    rst_n   = 0;
+    start   = 0;
+    tx_data = 0;
+    miso    = 0;
   endtask
 endinterface
