@@ -11,5 +11,6 @@ clean:
 	\rm -frd bus_cov ${MODULE}_simv.vdb cm.log .fsm.sch.verilog.xml
 	\rm -frd qrun sysProgressP.conf sysProgressPLog vdCov.conf vdCovLog
 
+#usage: make dv test={ur target tst}
 run_dv:
-	${ROOT}/sim/run_sim.csh dv ${MODULE} ${TEST_NAME}
+	${ROOT}/sim/run_sim.csh dv ${MODULE} ${test}

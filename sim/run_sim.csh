@@ -129,7 +129,7 @@ if ($MODE == "dv") then
             echo "$command" >> $qrun_file
         endif
 
-        set command = "$MODULE\_simv -l $MODULE\_sim.log +UVM_NO_RELNOTES $coverage2 $assert2 +UVM_TEST_NAME=$TEST"
+        set command = "$MODULE\_simv -l $MODULE\_sim.log +UVM_NO_RELNOTES $coverage2 $assert2 +UVM_TESTNAME=$TEST"
         echo "[==== INFO ====] $command"
         if ($NR != 1) then
             eval $command
