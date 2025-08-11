@@ -17,10 +17,10 @@ module spi_tb;
   `include "spi_cov.sv"
   `include "spi_env.sv"
   `include "spi_test.sv"
-
+`include "spi_slave.sv"
   spi_if spi_vif();
 
-  spi dut(
+  spi #(.CLK_DIV(4)) dut(
 	.clk(spi_vif.clk),
 	.rst_n(spi_vif.rst_n),
 	.start(spi_vif.start),
@@ -43,6 +43,7 @@ module spi_tb;
     uvm_config_db#(virtual spi_if)::set(null, "*", "vif", spi_vif);
     uvm_config_db#(virtual spi_if.drv_mp)::set(null, "*drv*", "vif", spi_vif.drv_mp);
     uvm_config_db#(virtual spi_if.mon_mp)::set(null, "*mon*", "vif", spi_vif.mon_mp);
+    uvm_config_db#(int)::set(null, "*", "slave_reset_response", slave_reset_response);
     run_test();
   end
 

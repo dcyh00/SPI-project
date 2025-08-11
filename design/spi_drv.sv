@@ -18,25 +18,26 @@ class spi_drv extends uvm_driver #(spi_tran);
 
   task run_phase(uvm_phase phase);
     spi_tran tr;
+	reset_seq(tr);
     forever begin
       seq_item_port.get_next_item(tr);
-//
       @(vif.drv_cb);
-	`uvm_info(get_type_name(), "Good news for seeing this", UVM_LOW)
-//      uvm_config_db#(int)::set(null, "*", "tran_count", tr.seq_count);
-//      uvm_config_db#(int)::set(null, "*", "tran_index", tr.seq_index);
-//      uvm_config_db#(string)::set(null, "*", "tran_type", tr.seq_type);
-//
-//      `uvm_info("DRIVER", $sformatf("Drive %0d/%0d %s tran to DUT: a=%0b, b=%0b, cin=%0b",
-//                                    tr.seq_index, tr.seq_count, tr.seq_type, tr.a, tr.b, tr.cin),
-//                                    UVM_MEDIUM)
-//
-//      vif.drv_cb.a_tb   <= tr.a;      // Drive 'a' from transaction (tr) to DUT
-//      vif.drv_cb.b_tb   <= tr.b;      // Drive 'b' from transaction (tr) to DUT
-//      vif.drv_cb.cin_tb <= tr.cin;  // Drive 'cin' from transaction (tr) to DUT
-//
+	vif.start 	<= tr.start;
+	vif.tx_data 	<= tr.tx_data;
+	vif.miso	<= tr.miso;
+	
       seq_item_port.item_done();
     end
   endtask
+
+
+  	task reset_seq(spi_tran tr);
+		
+		vif.rst_n <= 1'b0;
+		repeat(5) @(posedge vif.clk);
+
+		vif.rst_n <= 1'b1; 
+		repeat(5) @(posedge vif.clk);
+	endtask
 endclass
 
