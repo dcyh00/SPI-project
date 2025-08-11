@@ -27,6 +27,7 @@ endif
 set command = ""
 setenv MODE $1
 setenv MODULE $2
+setenv TEST $3
 if (! $?STEP) then
     setenv STEP "2"
 endif
@@ -112,7 +113,7 @@ if ($MODE == "dv") then
             echo "$command" >> $qrun_file
         endif
 
-        set command = "$MODULE\_simv -l $MODULE\_sim.log +UVM_NO_RELNOTES $coverage2 $assert2"
+        set command = "$MODULE\_simv -l $MODULE\_sim.log +UVM_NO_RELNOTES $coverage2 $assert2 $TEST"
         echo "[==== INFO ====] $command"
         if ($NR != 1) then
             eval $command
@@ -128,7 +129,7 @@ if ($MODE == "dv") then
             echo "$command" >> $qrun_file
         endif
 
-        set command = "$MODULE\_simv -l $MODULE\_sim.log +UVM_NO_RELNOTES $coverage2 $assert2"
+        set command = "$MODULE\_simv -l $MODULE\_sim.log +UVM_NO_RELNOTES $coverage2 $assert2 $TEST"
         echo "[==== INFO ====] $command"
         if ($NR != 1) then
             eval $command

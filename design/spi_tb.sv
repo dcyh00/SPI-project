@@ -1,4 +1,4 @@
-module fa_tb;
+module spi_tb;
   import uvm_pkg::*;
   `include "uvm_macros.svh"
 
@@ -7,45 +7,48 @@ module fa_tb;
   final   $display(">>>>>>>> SIM TIME END  : %0t", $time);
 
   // Include all required files
-  `include "fa_tran.sv"
-  `include "fa_seq_r.sv"
-  `include "fa_seq_t.sv"
-  `include "fa_sqr.sv"
-  `include "fa_drv.sv"
-  `include "fa_mon.sv"
-  `include "fa_agt.sv"
-  `include "fa_scb.sv"
-  `include "fa_cov.sv"
-  `include "fa_env.sv"
-  `include "fa_test.sv"
-  `include "fa_test_r.sv"
-  `include "fa_test_t.sv"
+  `include "spi_tran.sv"
+  `include "spi_seq.sv"
+  `include "spi_sqr.sv"
+  `include "spi_drv.sv"
+  `include "spi_mon.sv"
+  `include "spi_agt.sv"
+  `include "spi_scb.sv"
+  `include "spi_cov.sv"
+  `include "spi_env.sv"
+  `include "spi_test.sv"
 
-  fadder_if fa_if();
+  spi_if spi_vif();
 
-  fadder dut(
-    .a    (fa_if.a_tb),
-    .b    (fa_if.b_tb),
-    .cin  (fa_if.cin_tb),
-    .sum  (fa_if.sum_tb),
-    .cout (fa_if.cout_tb)
+  spi dut(
+	.clk(spi_vif.clk),
+	.rst_n(spi_vif.rst_n),
+	.start(spi_vif.start),
+	.tx_data(spi_vif.tx_data),
+	.rx_data(spi_vif.rx_data),
+	.busy(spi_vif.busy),
+	.done(spi_vif.done),
+	.sclk(spi_vif.sclk),
+	.mosi(spi_vif.mosi),
+	.miso(spi_vif.miso),
+	.cs_n(spi_vif.cs_n)
   );
 
   initial begin
-    fa_if.clk_tb = 0;
-    forever #5 fa_if.clk_tb = ~fa_if.clk_tb;
+    spi_if.clk = 0;
+    forever #5 spi_if.clk = ~spi_if.clk;
   end
 
   initial begin
-    uvm_config_db#(virtual fadder_if)::set(null, "*", "vif", fa_if);
-    uvm_config_db#(virtual fadder_if.drv_mp)::set(null, "*drv*", "vif", fa_if.drv_mp);
-    uvm_config_db#(virtual fadder_if.mon_mp)::set(null, "*mon*", "vif", fa_if.mon_mp);
+    uvm_config_db#(virtual spi_if)::set(null, "*", "vif", spi_vif);
+    uvm_config_db#(virtual spi_if.drv_mp)::set(null, "*drv*", "vif", spi_vif.drv_mp);
+    uvm_config_db#(virtual spi_if.mon_mp)::set(null, "*mon*", "vif", spi_vif.mon_mp);
     run_test();
   end
 
   initial begin
-    $fsdbDumpfile("fa_sim.fsdb");
-    $fsdbDumpSVA(0, fa_tb);
-    $fsdbDumpvars(0, fa_tb);
+    $fsdbDumpfile("spi_sim.fsdb");
+    $fsdbDumpSVA(0, spi_tb);
+    $fsdbDumpvars(0, spi_tb);
   end
 endmodule

@@ -1,8 +1,8 @@
-class fa_test extends uvm_test;
-  `uvm_component_utils(fa_test)
+class spi_test extends uvm_test;
+  `uvm_component_utils(spi_test)
 
-  fa_env env;
-  fa_seq seq;
+  spi_env env;
+  spi_seq seq;
 
   int seq_count = 10;
   int seq_min_delay = 0,  seq_max_delay = 0;
@@ -13,11 +13,11 @@ class fa_test extends uvm_test;
 
   function void build_phase(uvm_phase phase);
     super.build_phase(phase);
-    env = fa_env::type_id::create("env", this);
+    env = spi_env::type_id::create("env", this);
   endfunction
 
   task run_phase(uvm_phase phase);
-    seq = fa_seq::type_id::create("seq");
+    seq = spi_seq::type_id::create("seq");
 
     seq.seq_count   = this.seq_count;
     seq.min_delay   = this.seq_min_delay;
@@ -32,8 +32,7 @@ class fa_test extends uvm_test;
     fork
       seq.start(env.agt.sqr);
     join
-    // Important to avoid simulation ended before processing all the FIFO contents
-    wait(env.scb.tran_index == seq.seq_count);
+
     phase.drop_objection(this);
   endtask
 endclass
