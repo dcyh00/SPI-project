@@ -35,8 +35,8 @@ module spi_tb;
   );
 
   initial begin
-    spi_if.clk = 0;
-    forever #5 spi_if.clk = ~spi_if.clk;
+    spi_vif.clk = 0;
+    forever #5 spi_vif.clk = ~spi_vif.clk;
   end
 
   initial begin

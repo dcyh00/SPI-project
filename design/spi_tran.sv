@@ -1,4 +1,4 @@
-class fa_tran extends uvm_sequence_item;
+class spi_tran extends uvm_sequence_item;
   rand bit rst_n;
   rand bit start;
   rand bit miso;
@@ -18,9 +18,9 @@ class fa_tran extends uvm_sequence_item;
   string seq_type;
   string tran_type;
 
-  `uvm_object_utils(fa_tran)
+  `uvm_object_utils(spi_tran)
 
-  function new(string name = "fa_tran");
+  function new(string name = "spi_tran");
     super.new(name);
   endfunction
 endclass

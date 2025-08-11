@@ -15,8 +15,8 @@ class spi_mon extends uvm_monitor;
 
   function void build_phase(uvm_phase phase);
     super.build_phase(phase);
-    if(!uvm_config_db#(virtual spi_if)::get(this, "", "vif", vif)) begin
-      `uvm_error("MONITOR", "Virtual interface (spi_if) not found in config db")
+    if(!uvm_config_db#(virtual spi_if.mon_mp)::get(this, "", "vif", vif)) begin
+      `uvm_error("MONITOR", "Virtual interface (spi_if.mon_mp) not found in config db")
     end
   endfunction
 
@@ -28,7 +28,6 @@ class spi_mon extends uvm_monitor;
     forever begin
       @(posedge vif.clk);  // Clocking block
       tr_dut          = spi_tran::type_id::create("tr_dut");
-      tr_dut.clk      = vif.clk;
       tr_dut.rst_n    = vif.rst_n;
       tr_dut.start    = vif.start;
       tr_dut.tx_data  = vif.tx_data;

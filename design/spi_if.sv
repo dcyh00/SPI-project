@@ -43,32 +43,30 @@ interface spi_if;
 
   clocking drv_cb @(posedge clk);
     default input #1step output #1;
-    input   clk,
-    output  rst_n,
-    output  start,
-    output  tx_data,
-    input   rx_data,
-    input   busy,
-    input   done,
-    input   sclk,
-    input   mosi,
-    output  miso,
-    input   cs_n
+    output  rst_n;
+    output  start;
+    output  tx_data;
+    input   rx_data;
+    input   busy;
+    input   done;
+    input   sclk;
+    input   mosi;
+    output  miso;
+    input   cs_n;
   endclocking
 
-  clocking mon_cb @(posedge clk_tb);
+  clocking mon_cb @(posedge clk);
     default input #1step output #1;
-    input clk,
-    input rst_n,
-    input start,
-    input tx_data,
-    input rx_data,
-    input busy,
-    input done,
-    input sclk,
-    input mosi,
-    input miso,
-    input cs_n
+    input rst_n;
+    input start;
+    input tx_data;
+    input rx_data;
+    input busy;
+    input done;
+    input sclk;
+    input mosi;
+    input miso;
+    input cs_n;
   endclocking
 
   task automatic init_tb();
