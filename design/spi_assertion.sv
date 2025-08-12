@@ -5,18 +5,18 @@ parameter sclk_period = 2*CLK_DIV;
 //when there is data chg, the busy must be always HIGH
 //CHP 1: Data transfer (mosi)
 property bus_high;
-	@(negedge spi_vif.clk) 
+	@(negedge spi_vif.clk)
 	( $rose(spi_vif.mosi) || $fell(spi_vif.mosi) ) |-> (spi_vif.busy);
 endproperty
 
 property cs_low;
-	@(negedge spi_vif.clk) 
+	@(negedge spi_vif.clk)
 	( $rose(spi_vif.mosi) || $fell(spi_vif.mosi) ) |-> !(spi_vif.cs_n);
 endproperty
 
 //cs rose tgt as done signal asserted
 property cs_aligned_done;
-	@(negedge spi_vif.clk) 
+	@(negedge spi_vif.clk)
 	( $rose(spi_vif.done) ) |-> $rose(spi_vif.cs_n);
 endproperty
 
@@ -37,9 +37,30 @@ property sclk_glitch_fell;
 	$fell(spi_vif.sclk) |-> ##4 $rose(spi_vif.sclk);
 endproperty
 
-assert_bus_high: assert property(bus_high);
-assert_cs_low: assert property(cs_low);
-assert_cs_aligned_done: assert property(cs_aligned_done);
-assert_rxdata_timing: assert property(rxdata_timing);
+// busy assert 1cycle after start
+property busy_after_start;
+  @(posedge spi_vif.clk) disable iff (!spi_vif.rst_n)
+  $rose(spi_vif.start) |=> $rose(spi_vif.busy);
+endproperty
+
+// cs_n deassert 1cycle after start
+property cs_n_after_start;
+  @(posedge spi_vif.clk) disable iff (!spi_vif.rst_n)
+  $rose(spi_vif.start) |=> $fell(spi_vif.cs_n);
+endproperty
+
+// busy deasser 1cycle after done
+property busy_after_done;
+  @(posedge spi_vif.clk) disable iff (!spi_vif.rst_n)
+  $rose(spi_vif.done) |=> $fell(spi_vif.busy);
+endproperty
+
+assert_bus_high        : assert property(bus_high);
+assert_cs_low          : assert property(cs_low);
+assert_cs_aligned_done : assert property(cs_aligned_done);
+assert_rxdata_timing   : assert property(rxdata_timing);
 assert_sclk_glitch_rose: assert property(sclk_glitch_rose);
 assert_sclk_glitch_fell: assert property(sclk_glitch_fell);
+assert_busy_after_start: assert property(busy_after_start);
+assert_cs_n_after_start: assert property(cs_n_after_start);
+assert_busy_after_done : assert property(busy_after_done);
