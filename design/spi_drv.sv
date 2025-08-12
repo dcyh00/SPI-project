@@ -27,7 +27,7 @@ class spi_drv extends uvm_driver #(spi_tran);
 	vif.miso	<= tr.miso;
       @(vif.drv_cb);
 	vif.start 	<= 1'b0;
-	
+	@(negedge vif.done);
       seq_item_port.item_done();
     end
   endtask
