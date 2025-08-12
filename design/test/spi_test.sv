@@ -5,6 +5,8 @@ class spi_test extends uvm_test;
   spi_seq seq;
   int seq_count = 10;
   int seq_min_delay = 0,  seq_max_delay = 0;
+  virtual spi_if vif;
+
 
   function new(string name, uvm_component parent);
     super.new(name, parent);
@@ -13,6 +15,8 @@ class spi_test extends uvm_test;
   function void build_phase(uvm_phase phase);
     super.build_phase(phase);
     env = spi_env::type_id::create("env", this);
+    uvm_config_db#(virtual spi_if)::get(null, "*", "vif", vif);
+	
   endfunction
 
   task run_phase(uvm_phase phase);
