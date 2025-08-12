@@ -18,28 +18,43 @@ class spi_drv extends uvm_driver #(spi_tran);
 
   task run_phase(uvm_phase phase);
     spi_tran tr;
-	reset_seq(tr);
     forever begin
       seq_item_port.get_next_item(tr);
-      @(vif.drv_cb);
-	vif.start 	<= 1'b1;
-	vif.tx_data 	<= tr.tx_data;
-	vif.miso	<= tr.miso;
-      @(vif.drv_cb);
-	vif.start 	<= 1'b0;
-	@(negedge vif.done);
-      seq_item_port.item_done();
+	
+	if(tr.cmd == 1) begin
+	`uvm_info(get_type_name(), "CMD == 1",UVM_LOW)
+		vif.rst_n <= 1'b0;
+		repeat(5) @(posedge vif.clk);
+
+		vif.rst_n <= 1'b1; 
+		repeat(5) @(posedge vif.clk);
+		vif.tx_data	<=	tr.tx_data;
+		vif.miso	<=	tr.miso;
+	end
+	else begin
+		tran_seq(tr);
+	end
+       
+	seq_item_port.item_done();
     end
   endtask
 
 
-  	task reset_seq(spi_tran tr);
+  	task tran_seq(spi_tran tr);
 		
 		vif.rst_n <= 1'b0;
 		repeat(5) @(posedge vif.clk);
 
 		vif.rst_n <= 1'b1; 
 		repeat(5) @(posedge vif.clk);
+		@(vif.drv_cb);
+		vif.start 	<= 1'b1;
+		vif.tx_data 	<= tr.tx_data;
+		vif.miso	<= tr.miso;
+		@(vif.drv_cb);
+		vif.start 	<= 1'b0;
+		@(negedge vif.done);
+
 	endtask
 endclass
 
