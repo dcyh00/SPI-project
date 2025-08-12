@@ -2,7 +2,7 @@ Magic 271485
 Revision Verdi_W-2024.09-SP2
 
 ; Window Layout <x> <y> <width> <height> <signalwidth> <valuewidth>
-viewPort 0 25 2130 817 129 65
+viewPort 0 25 900 421 129 65
 
 ; File list:
 ; openDirFile [-d delimiter] [-s time_offset] [-rf auto_bus_rule_file] path_name file_name
@@ -16,16 +16,16 @@ signalSpacing 5
 
 ; windowTimeUnit is used for zoom, cursor & marker
 ; waveform viewport range
-zoom 0.000000 921386.578005
-cursor 0.000000
+zoom 0.000000 2610850.000000
+cursor 955000.000000
 marker 0.000000
 
 ; user define markers
 ; userMarker time_pos marker_name color linestyle
 ; visible top row signal index
-top 0
+top 20
 ; marker line index
-markerPos 21
+markerPos 26
 
 ; event list
 ; addEvent event_name event_expression
@@ -42,7 +42,7 @@ COMPLEX_EVENT_END
 
 ; toolbar current search type
 ; curSTATUS search_type
-curSTATUS ByChange
+curSTATUS ByCmpError
 
 
 addGroup "G1"
@@ -69,6 +69,18 @@ addSignal -h 15 -UNSIGNED -holdScope state[31:0]
 addSignal -h 15 -UNSIGNED -HEX -holdScope tx_data[7:0]
 addSignal -h 15 -UNSIGNED -HEX -holdScope tx_reg[7:0]
 addGroup "G3"
+addSignal -h 15 /spi_tb/spi_if0/mon_cb/busy
+addSignal -h 15 -holdScope cs_n
+addSignal -h 15 -holdScope miso
+addSignal -h 15 -holdScope mosi
+addSignal -h 15 -holdScope done
+addSignal -h 15 -holdScope rst_n
+addSignal -h 15 -UNSIGNED -HEX -holdScope rx_data[7:0]
+addSignal -h 15 -holdScope start
+addSignal -h 15 -UNSIGNED -HEX -holdScope tx_data[7:0]
+addGroup "G4"
+addGroup "G5"
+addGroup "G6"
 
 ; getSignalForm Scope Hierarchy Status
 ; active file of getSignalForm
@@ -78,11 +90,14 @@ GETSIGNALFORM_SCOPE_HIERARCHY_BEGIN
 getSignalForm close
 
 "/spi_tb"
+"/spi_tb/spi_if0"
 
 SCOPE_LIST_BEGIN
 "/spi_tb"
 "/spi_tb/spi_if0"
 "/spi_tb/dut"
+"/spi_tb/spi_if0/mon_cb"
+"/spi_tb/spi_if0/mon_cbs"
 SCOPE_LIST_END
 
 GETSIGNALFORM_SCOPE_HIERARCHY_END

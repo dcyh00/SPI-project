@@ -1,3 +1,5 @@
+TEST ?= spi_test
+
 dv: clean run_dv
 
 clean:
@@ -14,3 +16,9 @@ clean:
 #usage: make dv test={ur target tst}
 run_dv:
 	${ROOT}/sim/run_sim.csh dv ${MODULE} ${test}
+
+fsdb:
+	verdi -ssf spi_sim.fsdb &
+
+test_list:
+	ls -l ${ROOT}/design/test/

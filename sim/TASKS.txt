@@ -13,7 +13,6 @@ spi/
 ├── spi_test.sv      // Test class
 └── spi_tb.sv        // Testbench top
 
-#this is the test mesg
 SPI Master Controller
 ─────────────────────
 Serial Peripheral Interface Master Controller
@@ -128,17 +127,11 @@ Requirements
          a. Verify sclk period = 2 * CLK_DIV * clk period
        Idle State (CPOL=0)
          c. Confirm sclk=0 when cs_n=1 (idle)
-       No Glitches
-         d. Ensure no sclk edges occur outside transfers
   4. Error Cases & Corner Cases
        Reset During Transfer
-         a. Aborts transaction, forces busy=0, cs_n=1, sclk=0
-       Back-to-Back Transfers
-         b. Verify done from the first transfer doesn’t corrupt the next start
+         a. Aborts transaction, ensure busy=0, cs_n=1, sclk=0
        start Without rst_n
-         c. Ensure no operation starts until after reset
-       miso Timing Violations
-         d. Test if miso changes too close to sclk rising edge (setup/hold checks)
+         b. Ensure no operation starts until after reset
   5. UVM-Specific Checks
        Transaction Matching
          a. Track mosi/miso correctness
@@ -146,7 +139,7 @@ Requirements
          c. Reset during active transfer
        Coverage
          d. tx_data and rx_data
-         e. Get to 100% (or closer) functional coverage
+         e. Get to 95% functional coverage
 
 % vim ../design/spi_tb.sv
 A slave is needed in the testbench
@@ -205,9 +198,15 @@ Need to have waveform dump, see below
         $fsdbDumpvars(0, spi_tb);
 
 % vim ../design/spi_if.sv
-Please use both clocking and modport blocks since this is a master slave design
+About clocking and modport blocks, either one or both can be used, or even optional to use any
 The modport can include the clocking block to avoid repeating the clocking block contents, see below
-    modport DRV (clocking drv_cb, output sclk, mosi, cs_n, input miso);
+    modport drv_mp (clocking drv_cb, output sclk, mosi, cs_n, input miso);
+For going thru drv_cb in spi_drv, see below
+    virtual spi_if vif;
+    vif.drv_cb.start;
+For going thru drv_mp in spi_drv, see below
+    virtual spi_if.drv_mp vif_m;
+    vif_m.miso;
 
 % vim ../design/spi_mon.sv
 Please monitor both positive and negative edges of sclk
@@ -223,3 +222,6 @@ See all the transactions
 % urg -full64 -dir spi_simv.vdb -report spi_cov
 % \ls -l `echo $ROOT/sim/spi_cov/dashboard.html`
 Copy and paste the full path of dashboard.html to the web browser
+
+Lastly, inject few bugs in spi.sv and see if your testbench can catch it
+Have fun!
