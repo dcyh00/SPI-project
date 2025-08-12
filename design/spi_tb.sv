@@ -36,7 +36,7 @@ module spi_tb;
   );
 
   initial begin
-    spi_vif.clk = 0;
+    spi_vif.init_tb();
     forever #5 spi_vif.clk = ~spi_vif.clk;
   end
 
@@ -54,7 +54,7 @@ module spi_tb;
 
   initial begin
     $fsdbDumpfile("spi_sim.fsdb");
-    $fsdbDumpSVA(0, spi_tb);
+    //$fsdbDumpSVA(0, spi_tb);
     $fsdbDumpvars(0, spi_tb);
   end
 
