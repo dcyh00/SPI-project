@@ -15,6 +15,9 @@ class spi_protocol_test extends spi_test;
     
 	seq.randomize() with { tx_data == 8'hA5;};
     	seq.start(env.agt.sqr);
+	//seq.randomize() with { tx_data == 8'hB6;};
+	seq.randomize();
+    	seq.start(env.agt.sqr);
 	#1000ns;
     phase.drop_objection(this);
   endtask
