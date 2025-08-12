@@ -23,11 +23,7 @@ class spi_drv extends uvm_driver #(spi_tran);
 	
 	if(tr.cmd == 1) begin
 	`uvm_info(get_type_name(), "CMD == 1",UVM_LOW)
-		vif.rst_n <= 1'b0;
-		repeat(5) @(posedge vif.clk);
 
-		vif.rst_n <= 1'b1; 
-		repeat(5) @(posedge vif.clk);
 		vif.tx_data	<=	tr.tx_data;
 		vif.miso	<=	tr.miso;
 	end
