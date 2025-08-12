@@ -8,7 +8,7 @@ module spi_tb;
 
   // Include all required files
   `include "spi_tran.sv"
-  `include "spi_seq.sv"
+  `include "spi_seq_include.sv"
   `include "spi_sqr.sv"
   `include "spi_drv.sv"
   `include "spi_mon.sv"
@@ -16,8 +16,9 @@ module spi_tb;
   `include "spi_scb.sv"
   `include "spi_cov.sv"
   `include "spi_env.sv"
-  `include "spi_test.sv"
-`include "spi_slave.sv"
+  `include "spi_test_include.sv"
+  `include "spi_slave.sv"
+
   spi_if spi_vif();
 
   spi #(.CLK_DIV(4)) dut(

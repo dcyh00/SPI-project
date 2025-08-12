@@ -1,0 +1,2 @@
+`include "spi_test.sv"
+`include "spi_protocol_test.sv"

@@ -10,13 +10,8 @@ class spi_seq extends uvm_sequence #(spi_tran);
 
   function new(string name = "spi_seq");
     super.new(name);
-    seq_index = 0;
-    seq_type = "normal";
   endfunction
 
-  function int get_random_delay();
-    return $urandom_range(min_delay, max_delay);
-  endfunction
 
   task body();
     spi_tran tr;
