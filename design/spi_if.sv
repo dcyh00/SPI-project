@@ -11,6 +11,7 @@ interface spi_if;
   logic mosi;
   logic miso;
   logic cs_n;
+  logic [7:0] slave_rx_data;
 
   // optional modport
   modport drv_mp(

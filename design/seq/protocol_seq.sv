@@ -1,5 +1,9 @@
 class protocol_seq extends spi_seq;
 	`uvm_object_utils(protocol_seq)
+	
+	rand bit [7:0] tx_data;
+	rand bit miso;
+	rand bit start_bit;
 
 	function new(string name = "spi_seq");
     		super.new(name);
@@ -9,12 +13,13 @@ class protocol_seq extends spi_seq;
 		
 		spi_tran tr;
     		`uvm_info(get_type_name(), "Protocol SEQ", UVM_MEDIUM)
-		repeat (10) begin
 			tr= spi_tran::type_id::create("tr");
 			start_item(tr);
-			tr.randomize() with {start==1;};
+			tr.randomize()  with{
+				tx_data 	== 	local::tx_data;
+				//start_bit	==	local::start_bit;
+				miso		==	local::miso;};
 			finish_item(tr);
-		end
 	endtask
 
 endclass

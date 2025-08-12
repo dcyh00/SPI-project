@@ -22,9 +22,11 @@ class spi_drv extends uvm_driver #(spi_tran);
     forever begin
       seq_item_port.get_next_item(tr);
       @(vif.drv_cb);
-	vif.start 	<= tr.start;
+	vif.start 	<= 1'b1;
 	vif.tx_data 	<= tr.tx_data;
 	vif.miso	<= tr.miso;
+      @(vif.drv_cb);
+	vif.start 	<= 1'b0;
 	
       seq_item_port.item_done();
     end
