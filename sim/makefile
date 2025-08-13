@@ -12,6 +12,7 @@ clean:
 	\rm -frd seed* sysBusyP* vc_hdrs.h
 	\rm -frd bus_cov ${MODULE}_simv.vdb cm.log .fsm.sch.verilog.xml
 	\rm -frd qrun sysProgressP.conf sysProgressPLog vdCov.conf vdCovLog
+	\rm -frd evaluate_result.fsdb*
 
 #usage: make dv test={ur target tst}
 run_dv:
