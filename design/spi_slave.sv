@@ -44,7 +44,8 @@
                 idle_counter <= idle_counter + 1;
             end
             else begin
-                slave_tx_data <= SLAVE_RESET_RESPONSE;  // Revert to default
+                //slave_tx_data <= SLAVE_RESET_RESPONSE;  // Revert to default
+                slave_tx_data <= spi_vif.slave_send_data;  // Revert to default
             end
         end
         else begin  // SPI active (cs_n=0)
