@@ -50,7 +50,7 @@ class spi_drv extends uvm_driver #(spi_tran);
 		@(vif.drv_cb);
 		vif.start 	<= 1'b0;
 		@(negedge vif.done);
-
+		repeat(5) @(vif.drv_cb);
 	endtask
 endclass
 

@@ -42,9 +42,13 @@ endproperty
 //data update only when done rose
 property rxdata_timing;
 	@(negedge spi_vif.clk) disable iff( !spi_vif.rst_n)
-	!($rose(spi_vif.done) ) |-> $stable(spi_vif.rx_data);
+	($rose(spi_vif.done) ) |-> $changed(spi_vif.rx_data);
 endproperty
 
+property rxdata_timing_fell;
+	@(negedge spi_vif.clk) disable iff( !spi_vif.rst_n)
+	($fell(spi_vif.done) ) |=> (spi_vif.rx_data == '0);
+endproperty
 //sclk no glitch
 property sclk_glitch_rose;
 	@(negedge spi_vif.clk) disable iff (!spi_vif.busy)
