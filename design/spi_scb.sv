@@ -43,10 +43,10 @@ class spi_scb extends uvm_scoreboard;
 		
 		//this one is to compare the tx_data with the sampled data in
 		//slave
-		if(tr_dut.rx_data !== 8'hb9) begin
-			`uvm_error(get_type_name(), $sformatf("[ERROR] Expected slave sampled_data = %h, Actual = %h", 8'hb9, tr_dut.rx_data))
+		if(tr_dut.rx_data !== tr_dut.slave_send_data) begin
+			`uvm_error(get_type_name(), $sformatf("[ERROR] Expected slave sampled_data = %h, Actual = %h", tr_dut.slave_send_data, tr_dut.rx_data))
 		end
-		else `uvm_info(get_type_name(), $sformatf("[PASS] Expected slave sampled_data = %h, Actual = %h", 8'hb9, tr_dut.rx_data), UVM_LOW)
+		else `uvm_info(get_type_name(), $sformatf("[PASS] Expected slave sampled_data = %h, Actual = %h", tr_dut.slave_send_data, tr_dut.rx_data), UVM_LOW)
 
 	endfunction
 endclass

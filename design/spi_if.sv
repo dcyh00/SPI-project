@@ -12,6 +12,7 @@ interface spi_if;
   logic miso;
   logic cs_n;
   logic [7:0] slave_rx_data;
+  logic [7:0] slave_send_data;
 
   // optional modport
   modport drv_mp(
@@ -25,7 +26,9 @@ interface spi_if;
     input   sclk,
     input   mosi,
     output  miso,
-    input   cs_n
+    input   cs_n,
+    input   slave_rx_data, 
+    output  slave_send_data 
   );
 
   modport mon_mp(
@@ -39,7 +42,9 @@ interface spi_if;
     input sclk,
     input mosi,
     input miso,
-    input cs_n
+    input cs_n,
+    input slave_rx_data,
+    input  slave_send_data 
   );
 
   clocking drv_cb @(posedge clk);
@@ -54,6 +59,8 @@ interface spi_if;
     input   mosi;
     output  miso;
     input   cs_n;
+    input   slave_rx_data;
+    output   slave_send_data;
   endclocking
 
   clocking mon_cb @(posedge clk);
@@ -68,6 +75,8 @@ interface spi_if;
     input mosi;
     input miso;
     input cs_n;
+    input slave_rx_data;
+    input slave_send_data;
   endclocking
 
   task automatic init_tb();

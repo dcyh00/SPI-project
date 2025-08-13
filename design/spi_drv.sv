@@ -41,10 +41,12 @@ class spi_drv extends uvm_driver #(spi_tran);
 
 
   task tran_seq(spi_tran tr);
-		@(vif.drv_cb);
-		vif.start 	<= 1'b1;
 		vif.tx_data 	<= tr.tx_data;
+		vif.slave_send_data <= tr.slave_send_data;
 		vif.miso	<= tr.miso;
+		repeat(5) @(vif.drv_cb);
+		vif.start 	<= 1'b1;
+
 		@(vif.drv_cb);
 		vif.start 	<= 1'b0;
 		@(negedge vif.done);

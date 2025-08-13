@@ -14,28 +14,28 @@ endproperty
 //when there is data chg, the busy must be always HIGH
 //CHP 1: Data transfer (mosi)
 property bus_high;
-	@(negedge spi_vif.clk)
+	@(negedge spi_vif.clk) disable iff( !spi_vif.rst_n)
 	( $rose(spi_vif.mosi) || $fell(spi_vif.mosi) ) |-> (spi_vif.busy);
 endproperty
 
 property busy_deassert;
-	@(negedge spi_vif.clk)
+	@(negedge spi_vif.clk) disable iff( !spi_vif.rst_n)
 	$rose(spi_vif.busy) |=> ##(8*SCLK_PERIOD) $fell(spi_vif.busy);
 endproperty
 
 property cs_low;
-	@(negedge spi_vif.clk)
+	@(negedge spi_vif.clk) disable iff( !spi_vif.rst_n)
 	( $rose(spi_vif.mosi) || $fell(spi_vif.mosi) ) |-> !(spi_vif.cs_n);
 endproperty
 
 property cs_deassert;
-	@(negedge spi_vif.clk)
+	@(negedge spi_vif.clk) disable iff( !spi_vif.rst_n)
 	$fell(spi_vif.cs_n) |-> ##(8*SCLK_PERIOD) $rose(spi_vif.cs_n);
 endproperty
 
 //cs rose tgt as done signal asserted
 property cs_aligned_done;
-	@(negedge spi_vif.clk)
+	@(negedge spi_vif.clk) disable iff( !spi_vif.rst_n)
 	( $rose(spi_vif.done) ) |-> $rose(spi_vif.cs_n);
 endproperty
 

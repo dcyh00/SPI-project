@@ -39,6 +39,7 @@ class spi_mon extends uvm_monitor;
       tr_dut.miso     = vif.miso;
       tr_dut.cs_n     = vif.cs_n;
       tr_dut.slave_rx_data = vif.slave_rx_data;
+      tr_dut.slave_send_data = vif.slave_send_data;
 	
 	@(negedge vif.clk);
 	
