@@ -27,8 +27,8 @@ interface spi_if;
     input   mosi,
     output  miso,
     input   cs_n,
-    input   slave_rx_data, 
-    output  slave_send_data 
+    input   slave_rx_data,
+    output  slave_send_data
   );
 
   modport mon_mp(
@@ -44,7 +44,7 @@ interface spi_if;
     input miso,
     input cs_n,
     input slave_rx_data,
-    input  slave_send_data 
+    input  slave_send_data
   );
 
   clocking drv_cb @(posedge clk);

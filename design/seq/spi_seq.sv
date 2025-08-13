@@ -19,7 +19,7 @@ class spi_seq extends uvm_sequence #(spi_tran);
     repeat (seq_count) begin
       tr = spi_tran::type_id::create("tr");
       start_item(tr);
- 	    tr.randomize();
+      tr.randomize();
       finish_item(tr);
     end
   endtask

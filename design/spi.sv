@@ -8,7 +8,7 @@ module spi #(
     output logic [7:0]  rx_data,  // Received data
     output logic        busy,     // Transmission in progress
     output logic        done,     // Transmission complete
-    
+
     // SPI interface
     output logic        sclk,     // SPI clock
     output logic        mosi,     // Master out, slave in
@@ -20,7 +20,7 @@ module spi #(
     logic [7:0] rx_reg;    // Receive shift register
     logic [2:0] bit_cnt;   // Bit counter (0-7)
     logic [CLK_DIV-1:0] clk_cnt;  // Clock divider counter
-    
+
     typedef enum {IDLE, TRANSFER} state_t;
     state_t state;
 
@@ -36,7 +36,7 @@ module spi #(
             bit_cnt <= 3'd7;
         end else begin
             done <= 1'b0;
-            
+
             case (state)
                 IDLE: begin
                     cs_n <= 1'b1;
@@ -44,8 +44,8 @@ module spi #(
                     busy <= 1'b0;
                     clk_cnt <= '0;
                     bit_cnt <= 3'd7;
-		    rx_data <= 1'b0;
-                    
+                    rx_data <= 1'b0;
+
                     if (start) begin
                         state <= TRANSFER;
                         tx_reg <= tx_data;
@@ -53,16 +53,16 @@ module spi #(
                         busy <= 1'b1;
                     end
                 end
-                
+
                 TRANSFER: begin
                     if (clk_cnt == CLK_DIV-1) begin
                         clk_cnt <= '0;
                         sclk <= ~sclk;
-                        
+
                         if (sclk) begin
                             // Rising edge - sample MISO
                             rx_reg <= {rx_reg[6:0], miso};
-                            
+
                             if (bit_cnt == 0) begin
                                 // Last bit
                                 state <= IDLE;

@@ -17,7 +17,7 @@
             spi_vif.miso <= 1'b0;
             slave_tx_data <= SLAVE_RESET_RESPONSE;
 
-	    `uvm_info("SLV-RLD", $sformatf("RX_REG=0x%2h \(%8b\), TX_REG=0x%2h \(%8b\)",
+        `uvm_info("SLV-RLD", $sformatf("RX_REG=0x%2h \(%8b\), TX_REG=0x%2h \(%8b\)",
                                         slave_rx_data, slave_rx_data, slave_tx_data, slave_tx_data), UVM_MEDIUM)
         end
 	else begin

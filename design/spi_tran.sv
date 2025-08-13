@@ -13,7 +13,7 @@ class spi_tran extends uvm_sequence_item;
   logic cs_n;
   logic [7:0] slave_rx_data;
   rand logic [7:0] slave_send_data;
- 
+
   int seq_count;
   int seq_index;
   int tran_count;
