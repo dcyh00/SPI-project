@@ -23,3 +23,6 @@ fsdb:
 
 test_list:
 	ls -l ${ROOT}/design/test/
+
+cov:
+	verdi -cov -covdir spi_simv.vdb
