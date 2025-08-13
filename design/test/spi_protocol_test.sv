@@ -15,6 +15,9 @@ class spi_protocol_test extends spi_test;
     
 	seq.randomize() with { tx_data == 8'hA5;};
     	seq.start(env.agt.sqr);
+	
+	if(vif.slave_rx_data !== 8'hA5) `uvm_error(get_type_name(),"Wrong expected data")
+	else `uvm_info(get_type_name(), "PASS", UVM_LOW)
 	//seq.randomize() with { tx_data == 8'hB6;};
 	seq.randomize();
     	seq.start(env.agt.sqr);

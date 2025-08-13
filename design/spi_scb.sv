@@ -16,29 +16,37 @@ class spi_scb extends uvm_scoreboard;
   endfunction
 
   function void write(spi_tran tr_dut);
-    // bit exp_sum = tr_dut.a ^ tr_dut.b ^ tr_dut.cin;
-    // bit exp_cout = (tr_dut.a & tr_dut.b) | (tr_dut.cin & (tr_dut.a ^ tr_dut.b));
-    tran_index = tr_dut.tran_index;
 
-    // if(tr_dut.sum == exp_sum && tr_dut.cout == exp_cout) begin
-    //   passed_count++;
-    //   `uvm_info("SCOREBOARD", $sformatf("PASS %0d/%0d %s tran: a_tb=%b, b_tb=%b, cin_tb=%b > sum_tb=%b cout_tb=%b",
-    //                                     tran_index, tr_dut.tran_count, tr_dut.tran_type, tr_dut.a, tr_dut.b, tr_dut.cin, tr_dut.sum, tr_dut.cout),
-    //             UVM_MEDIUM)
-    // end
-    // else if(tr_dut.sum != exp_sum) begin
-    //   failed_count++;
-    //   `uvm_error("SCOREBOARD", $sformatf("FAIL SUM %0d/%0d %s tran: a_tb=%b, b_tb=%b, cin_tb=%b > sum_tb=%b (exp %b) <<<<<<<<<<<<<<<<",
-    //                                      tran_index, tr_dut.tran_count, tr_dut.tran_type, tr_dut.a, tr_dut.b, tr_dut.cin, tr_dut.sum, exp_sum))
-    // end
-    // else if(tr_dut.cout != exp_cout) begin
-    //   failed_count++;
-    //   `uvm_error("SCOREBOARD", $sformatf("FAIL COUT %0d/%0d %s tran: a_tb=%b, b_tb=%b, cin_tb=%b > cout_tb=%b (exp %b) <<<<<<<<<<<<<<<<",
-    //                                      tran_index, tr_dut.tran_count, tr_dut.tran_type, tr_dut.a, tr_dut.b, tr_dut.cin, tr_dut.cout, exp_cout))
-    // end
+	if(tr_dut.done) begin
+		tx_compare(tr_dut);
+		rx_compare(tr_dut);
+	end
+
   endfunction
 
   function void report_phase(uvm_phase phase);
-    `uvm_info("SCOREBOARD", $sformatf("Test Complete. Passed: %0d Failed: %0d", passed_count, failed_count), UVM_NONE)
+    //`uvm_info("SCOREBOARD", $sformatf("Test Complete. Passed: %0d Failed: %0d", passed_count, failed_count), UVM_NONE)
   endfunction
+	
+	function tx_compare(spi_tran tr_dut);
+		
+		//this one is to compare the tx_data with the sampled data in
+		//slave
+		if(tr_dut.tx_data !== tr_dut.slave_rx_data) begin
+			`uvm_error(get_type_name(), $sformatf("[ERROR] Expected slave sampled_data = %h, Actual = %h", tr_dut.tx_data, tr_dut.slave_rx_data))
+		end
+		else `uvm_info(get_type_name(), $sformatf("[PASS] Expected slave sampled_data = %h, Actual = %h", tr_dut.tx_data, tr_dut.slave_rx_data), UVM_LOW)
+
+	endfunction
+
+	function rx_compare(spi_tran tr_dut);
+		
+		//this one is to compare the tx_data with the sampled data in
+		//slave
+		if(tr_dut.rx_data !== 8'hb9) begin
+			`uvm_error(get_type_name(), $sformatf("[ERROR] Expected slave sampled_data = %h, Actual = %h", 8'hb9, tr_dut.rx_data))
+		end
+		else `uvm_info(get_type_name(), $sformatf("[PASS] Expected slave sampled_data = %h, Actual = %h", 8'hb9, tr_dut.rx_data), UVM_LOW)
+
+	endfunction
 endclass

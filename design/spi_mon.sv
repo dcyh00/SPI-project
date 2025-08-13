@@ -4,6 +4,7 @@ class spi_mon extends uvm_monitor;
   int tran_count;
   int tran_index;
   string tran_type;
+  bit [7:0] shift_reg;
 
   virtual spi_if.mon_mp vif;   // use mon_mp
   uvm_analysis_port #(spi_tran) mon_ap;
@@ -23,7 +24,6 @@ class spi_mon extends uvm_monitor;
   task run_phase(uvm_phase phase);
     spi_tran tr_dut;
 
-    @(posedge vif.clk);  // Clocking block
 
     forever begin
       @(posedge vif.clk);  // Clocking block
@@ -38,24 +38,10 @@ class spi_mon extends uvm_monitor;
       tr_dut.mosi     = vif.mosi;
       tr_dut.miso     = vif.miso;
       tr_dut.cs_n     = vif.cs_n;
-
-      if(!uvm_config_db#(int)::get(null, "", "tran_count", tran_count)) begin
-        `uvm_warning("MONITOR", "Unable to retrieve tran_count from spi_drv")
-      end
-      if(!uvm_config_db#(int)::get(null, "", "tran_index", tran_index)) begin
-        `uvm_warning("MONITOR", "Unable to retrieve tran_index from spi_drv")
-      end
-      if(!uvm_config_db#(string)::get(null, "", "tran_type", tran_type)) begin
-        `uvm_warning("MONITOR", "Unable to retrieve tran_type from spi_drv")
-      end
-
-      `uvm_info("MONITOR", $sformatf("Observe %0d/%0d %s tran from DUT: tx_data=%8b | rx_dta=%8b | cs_n=%0b | mosi=%0b | miso=%0b",
-                                     tran_index, tran_count, tran_type, tr_dut.tx_data, tr_dut.rx_data, tr_dut.cs_n, tr_dut.mosi, tr_dut.miso),
-             UVM_MEDIUM)
-
-      tr_dut.tran_count = this.tran_count;
-      tr_dut.tran_index = this.tran_index;
-      tr_dut.tran_type = this.tran_type;
+      tr_dut.slave_rx_data = vif.slave_rx_data;
+	
+	@(negedge vif.clk);
+	
       mon_ap.write(tr_dut);
     end
   endtask
