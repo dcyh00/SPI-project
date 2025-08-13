@@ -16,7 +16,7 @@ class spi_test extends uvm_test;
     super.build_phase(phase);
     env = spi_env::type_id::create("env", this);
     uvm_config_db#(virtual spi_if)::get(null, "*", "vif", vif);
-	
+
   endfunction
 
   task run_phase(uvm_phase phase);
@@ -33,7 +33,7 @@ class spi_test extends uvm_test;
 
     phase.raise_objection(this);
     fork
-    	seq.start(env.agt.sqr);
+      seq.start(env.agt.sqr);
     join
 
     phase.drop_objection(this);

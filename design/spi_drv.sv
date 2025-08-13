@@ -26,16 +26,16 @@ class spi_drv extends uvm_driver #(spi_tran);
       seq_item_port.get_next_item(tr);
 
       if(tr.cmd == 1) begin
-	      `uvm_info(get_type_name(), "CMD == 1",UVM_LOW)
+        `uvm_info(get_type_name(), "CMD == 1",UVM_LOW)
 
-		    vif.tx_data	<=	tr.tx_data;
-		    vif.miso	<=	tr.miso;
-	    end
-	    else begin
-		    tran_seq(tr);
-	    end
+        vif.tx_data	<=	tr.tx_data;
+        vif.miso	<=	tr.miso;
+      end
+      else begin
+        tran_seq(tr);
+      end
 
-	    seq_item_port.item_done();
+      seq_item_port.item_done();
     end
   endtask
 

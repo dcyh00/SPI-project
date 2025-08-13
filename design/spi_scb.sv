@@ -27,9 +27,9 @@ class spi_scb extends uvm_scoreboard;
   function void report_phase(uvm_phase phase);
     //`uvm_info("SCOREBOARD", $sformatf("Test Complete. Passed: %0d Failed: %0d", passed_count, failed_count), UVM_NONE)
   endfunction
-	
+
 	function tx_compare(spi_tran tr_dut);
-		
+
 		//this one is to compare the tx_data with the sampled data in
 		//slave
 		if(tr_dut.tx_data !== tr_dut.slave_rx_data) begin
@@ -40,7 +40,7 @@ class spi_scb extends uvm_scoreboard;
 	endfunction
 
 	function rx_compare(spi_tran tr_dut);
-		
+
 		//this one is to compare the tx_data with the sampled data in
 		//slave
 		if(tr_dut.rx_data !== tr_dut.slave_send_data) begin

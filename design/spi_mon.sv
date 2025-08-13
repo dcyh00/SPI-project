@@ -40,9 +40,9 @@ class spi_mon extends uvm_monitor;
       tr_dut.cs_n     = vif.cs_n;
       tr_dut.slave_rx_data = vif.slave_rx_data;
       tr_dut.slave_send_data = vif.slave_send_data;
-	
+
 	@(negedge vif.clk);
-	
+
       mon_ap.write(tr_dut);
     end
   endtask
