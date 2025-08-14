@@ -17,7 +17,7 @@ endproperty
 
 //when there is data chg, the busy must be always HIGH
 //CHP 1: Data transfer (mosi)
-property bus_high;
+property busy_high;
 	@(negedge spi_vif.clk) disable iff( !spi_vif.rst_n)
 	( $rose(spi_vif.mosi) || $fell(spi_vif.mosi) ) |-> (spi_vif.busy);
 endproperty
@@ -116,3 +116,4 @@ assert_cs_n_after_start : assert property(cs_n_after_start);
 assert_busy_after_done  : assert property(busy_after_done);
 assert_negedge_sampling : assert property(negedge_sampling) else $display( "SAMPLING_ERROR");
 assert_sclk_idle_low    : assert property(sclk_idle_low);
+assert_cs_deassert_done_assert: assert property(cs_deassert_done_assert);
