@@ -22,17 +22,17 @@ module spi_tb;
   spi_if spi_vif();
 
   spi #(.CLK_DIV(4)) dut(
-	.clk(spi_vif.clk),
-	.rst_n(spi_vif.rst_n),
-	.start(spi_vif.start),
-	.tx_data(spi_vif.tx_data),
-	.rx_data(spi_vif.rx_data),
-	.busy(spi_vif.busy),
-	.done(spi_vif.done),
-	.sclk(spi_vif.sclk),
-	.mosi(spi_vif.mosi),
-	.miso(spi_vif.miso),
-	.cs_n(spi_vif.cs_n)
+    .clk(spi_vif.clk),
+    .rst_n(spi_vif.rst_n),
+    .start(spi_vif.start),
+    .tx_data(spi_vif.tx_data),
+    .rx_data(spi_vif.rx_data),
+    .busy(spi_vif.busy),
+    .done(spi_vif.done),
+    .sclk(spi_vif.sclk),
+    .mosi(spi_vif.mosi),
+    .miso(spi_vif.miso),
+    .cs_n(spi_vif.cs_n)
   );
 
   initial begin

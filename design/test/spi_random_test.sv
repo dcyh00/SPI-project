@@ -16,7 +16,6 @@ class spi_random_test extends spi_test;
 
     phase.raise_objection(this);
     seq.start(env.agt.sqr);
-    #800ns;
     phase.drop_objection(this);
   endtask
 

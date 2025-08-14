@@ -16,12 +16,10 @@ class spi_scb extends uvm_scoreboard;
   endfunction
 
   function void write(spi_tran tr_dut);
-
-	if(tr_dut.done) begin
-		tx_compare(tr_dut);
-		rx_compare(tr_dut);
-	end
-
+		if(tr_dut.done) begin
+			tx_compare(tr_dut);
+			rx_compare(tr_dut);
+		end
   endfunction
 
   function void report_phase(uvm_phase phase);
@@ -29,18 +27,15 @@ class spi_scb extends uvm_scoreboard;
   endfunction
 
 	function tx_compare(spi_tran tr_dut);
-
 		//this one is to compare the tx_data with the sampled data in
 		//slave
 		if(tr_dut.tx_data !== tr_dut.slave_rx_data) begin
 			`uvm_error(get_type_name(), $sformatf("[ERROR] Expected slave sampled_data = %h, Actual = %h", tr_dut.tx_data, tr_dut.slave_rx_data))
 		end
 		else `uvm_info(get_type_name(), $sformatf("[PASS] Expected slave sampled_data = %h, Actual = %h", tr_dut.tx_data, tr_dut.slave_rx_data), UVM_LOW)
-
 	endfunction
 
 	function rx_compare(spi_tran tr_dut);
-
 		//this one is to compare the tx_data with the sampled data in
 		//slave
 		if(tr_dut.rx_data !== tr_dut.slave_send_data) begin
@@ -48,6 +43,5 @@ class spi_scb extends uvm_scoreboard;
 			`uvm_error(get_type_name(), $sformatf("[ERROR] Expected slave sampled_data = %h, Actual = %h", tr_dut.slave_send_data, tr_dut.rx_data))
 		end
 		else `uvm_info(get_type_name(), $sformatf("[PASS] Expected slave sampled_data = %h, Actual = %h", tr_dut.slave_send_data, tr_dut.rx_data), UVM_LOW)
-
 	endfunction
 endclass
