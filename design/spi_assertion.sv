@@ -102,6 +102,23 @@ property sclk_idle_low;
   (spi_vif.cs_n) |-> (spi_vif.sclk == 1'b0);
 endproperty
 
+// Need to run spi_start_test.sv to verify start_ignored_when_busy
+property start_ignored_when_busy; 
+  @(posedge spi_vif.clk) disable iff (!spi_vif.rst_n)
+  start_when_busy |-> ((spi_vif.done == 0) throughout spi_vif.start);
+endproperty
+
+sequence last_bit;
+  (spi_tb.dut.bit_cnt == 0) && 
+  (spi_tb.dut.clk_cnt == 3) && 
+  (!spi_vif.cs_n); 
+endsequence
+
+property done_after_lastbit;
+  @(posedge spi_vif.clk) disable iff (!spi_vif.rst_n)
+  last_bit ##4 last_bit |=>  $rose(spi_vif.done) ##1 $fell(spi_vif.done);
+endproperty
+
 assert_reset  	        : assert property(reset);
 assert_busy_high        : assert property(busy_high);
 assert_busy_deassert    : assert property(busy_deassert);
@@ -117,3 +134,5 @@ assert_busy_after_done  : assert property(busy_after_done);
 assert_negedge_sampling : assert property(negedge_sampling) else $display( "SAMPLING_ERROR");
 assert_sclk_idle_low    : assert property(sclk_idle_low);
 assert_cs_deassert_done_assert: assert property(cs_deassert_done_assert);
+assert_start_ignored: assert property (start_ignored_when_busy);
+assert_done_after_lastbit: assert property (done_after_lastbit);
