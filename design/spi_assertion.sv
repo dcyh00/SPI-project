@@ -103,17 +103,20 @@ property sclk_idle_low;
 endproperty
 
 // Need to run spi_start_test.sv to verify start_ignored_when_busy
+sequence start_when_busy;
+ spi_vif.busy && spi_vif.start;
+endsequence
 property start_ignored_when_busy; 
   @(posedge spi_vif.clk) disable iff (!spi_vif.rst_n)
   start_when_busy |-> ((spi_vif.done == 0) throughout spi_vif.start);
 endproperty
 
+// done 1 clk cycle after lastbit
 sequence last_bit;
   (spi_tb.dut.bit_cnt == 0) && 
   (spi_tb.dut.clk_cnt == 3) && 
   (!spi_vif.cs_n); 
 endsequence
-
 property done_after_lastbit;
   @(posedge spi_vif.clk) disable iff (!spi_vif.rst_n)
   last_bit ##4 last_bit |=>  $rose(spi_vif.done) ##1 $fell(spi_vif.done);
