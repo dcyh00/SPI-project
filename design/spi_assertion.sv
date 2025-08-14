@@ -40,7 +40,7 @@ property cs_n_deassert;
   $fell(spi_vif.cs_n) |-> ##(8*SCLK_PERIOD) $rose(spi_vif.cs_n);
 endproperty
 
-property cs_deassert_done_assert;
+property cs_n_deassert_done_assert;
 	@(negedge spi_vif.clk) disable iff( !spi_vif.rst_n)
 	$fell(spi_vif.cs_n) |-> ##(8*SCLK_PERIOD) $rose(spi_vif.done);
 endproperty
@@ -76,13 +76,13 @@ endproperty
 // busy assert 1cycle after start
 property busy_after_start;
   @(posedge spi_vif.clk) disable iff (!spi_vif.rst_n)
-  $rose(spi_vif.start) |=> $rose(spi_vif.busy);
+  ($rose(spi_vif.start) && !spi_vif.busy) |=> $rose(spi_vif.busy);
 endproperty
 
 // cs_n deassert 1cycle after start
 property cs_n_after_start;
   @(posedge spi_vif.clk) disable iff (!spi_vif.rst_n)
-  $rose(spi_vif.start) |=> $fell(spi_vif.cs_n);
+  ($rose(spi_vif.start) && !spi_vif.busy) |=> $fell(spi_vif.cs_n);
 endproperty
 
 // busy deasser 1cycle after done
@@ -91,10 +91,12 @@ property busy_after_done;
   $rose(spi_vif.done) |=> $fell(spi_vif.busy);
 endproperty
 
-//check sampling
+//check sampling // add condition to prevent false assertion due to 8'hFF and 8'h00
 property negedge_sampling;
   @(posedge spi_vif.clk) disable iff (!spi_vif.rst_n)
-  $fell(spi_vif.sclk) |-> $changed(spi_tb.dut.rx_reg[7:0]);
+  $fell(spi_vif.sclk) &&
+  !((spi_tb.dut.rx_reg == 8'hFF && spi_vif.miso == 1) || (spi_tb.dut.rx_reg == 8'h00 && spi_vif.miso == 0))
+  |-> $changed(spi_tb.dut.rx_reg[7:0]);
 endproperty
 
 property sclk_idle_low;
@@ -117,6 +119,7 @@ sequence last_bit;
   (spi_tb.dut.clk_cnt == 3) && 
   (!spi_vif.cs_n); 
 endsequence
+
 property done_after_lastbit;
   @(posedge spi_vif.clk) disable iff (!spi_vif.rst_n)
   last_bit ##4 last_bit |=>  $rose(spi_vif.done) ##1 $fell(spi_vif.done);
@@ -127,6 +130,7 @@ assert_busy_high        : assert property(busy_high);
 assert_busy_deassert    : assert property(busy_deassert);
 assert_cs_n_low         : assert property(cs_n_low);
 assert_cs_n_deassert    : assert property(cs_n_deassert);
+assert_cs_n_deassert_done_assert: assert property(cs_n_deassert_done_assert);
 assert_cs_n_aligned_done: assert property(cs_n_aligned_done);
 assert_rxdata_timing    : assert property(rxdata_timing);
 assert_sclk_glitch_rose : assert property(sclk_glitch_rose);
@@ -136,6 +140,5 @@ assert_cs_n_after_start : assert property(cs_n_after_start);
 assert_busy_after_done  : assert property(busy_after_done);
 assert_negedge_sampling : assert property(negedge_sampling) else $display( "SAMPLING_ERROR");
 assert_sclk_idle_low    : assert property(sclk_idle_low);
-assert_cs_deassert_done_assert: assert property(cs_deassert_done_assert);
 assert_start_ignored: assert property (start_ignored_when_busy);
 assert_done_after_lastbit: assert property (done_after_lastbit);
