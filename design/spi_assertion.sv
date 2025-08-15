@@ -108,30 +108,34 @@ sequence start_when_busy;
   spi_vif.busy && spi_vif.start;
 endsequence
 
+// start ignored when busy
 property start_ignored_when_busy;
   @(posedge spi_vif.clk) disable iff (!spi_vif.rst_n)
   start_when_busy |-> ((spi_vif.done == 0) throughout spi_vif.start);
 endproperty
 
-// done 1 clk cycle after lastbit
+// Check lastbit
 sequence last_bit;
   (spi_tb.dut.bit_cnt == 0) &&
   (spi_tb.dut.clk_cnt == 3) &&
   (!spi_vif.cs_n);
 endsequence
 
+// done 1 clk cycle after lastbit
 property done_after_lastbit;
   @(posedge spi_vif.clk) disable iff (!spi_vif.rst_n)
   last_bit ##4 last_bit |=>  $rose(spi_vif.done) ##1 $fell(spi_vif.done);
 endproperty
 
-sequence sclk_count;
+// Check sclk count active
+sequence sclk_count_active;
 (!spi_vif.cs_n) && (!spi_vif.sclk);
 endsequence
 
+// Verify sclk 2*CLK_DIV clk period
 property sclk_period;
   @(posedge spi_vif.clk) disable iff (!spi_vif.rst_n)
-  sclk_count |-> (!spi_vif.sclk) ##4 (spi_vif.sclk) ##4 (!spi_vif.sclk);
+  sclk_count_active |-> (!spi_vif.sclk) ##CLK_DIV (spi_vif.sclk) ##CLK_DIV (!spi_vif.sclk);
 endproperty
 
 assert_reset  	                : assert property(reset);
