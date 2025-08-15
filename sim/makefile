@@ -8,7 +8,7 @@ clean:
 	\rm -frd ${MODULE}_sim.vcd.vpd
 	\rm -frd ucli.key worklib debug.report
 	\rm -frd DVEfiles dve_report.* opendatabase.log
-	\rm -frd verdiLog inter.fsdb
+	\rm -frd verdiLog inter.fsdb *fsdb*
 	\rm -frd seed* sysBusyP* vc_hdrs.h
 	\rm -frd bus_cov ${MODULE}_simv.vdb cm.log .fsm.sch.verilog.xml *.vdb
 	\rm -frd qrun sysProgressP.conf sysProgressPLog vdCov.conf vdCovLog
@@ -38,4 +38,5 @@ all:
 	make run_dv test=spi_start_test
 	make run_dv test=spi_protocol_test
 	make run_dv test=spi_reset_test
-
+	make run_dv test=spi_random_test
+	make merge
