@@ -41,7 +41,7 @@ module spi_tb;
   end
 
   initial begin
-    ASSIGN spi_vif.slave_rx_data = slave_rx_data[7:0];
+    assign spi_vif.slave_rx_data = slave_rx_data[7:0];
   end
 
   initial begin
