@@ -34,7 +34,7 @@ property cs_n_low;
 endproperty
 
 // cs_n deassert after 8sclk
-property cs_n_deassert;
+property cs_n_deassert; //All your tools and features are now in one 
   @(negedge spi_vif.clk) disable iff( !spi_vif.rst_n)
   $fell(spi_vif.cs_n) |-> ##(8*SCLK_PERIOD) $rose(spi_vif.cs_n);
 endproperty
@@ -125,6 +125,15 @@ property done_after_lastbit;
   last_bit ##4 last_bit |=>  $rose(spi_vif.done) ##1 $fell(spi_vif.done);
 endproperty
 
+sequence sclk_count;
+(!spi_vif.cs_n) && (!spi_vif.sclk);
+endsequence
+
+property sclk_period;
+  @(posedge spi_vif.clk) disable iff (!spi_vif.rst_n)
+  sclk_count |-> (!spi_vif.sclk) ##4 (spi_vif.sclk) ##4 (!spi_vif.sclk);
+endproperty
+
 assert_reset  	                : assert property(reset);
 assert_busy_high                : assert property(busy_high);
 assert_busy_deassert            : assert property(busy_deassert);
@@ -142,3 +151,4 @@ assert_negedge_sampling         : assert property(negedge_sampling) else $displa
 assert_sclk_idle_low            : assert property(sclk_idle_low);
 assert_start_ignored            : assert property (start_ignored_when_busy);
 assert_done_after_lastbit       : assert property (done_after_lastbit);
+assert_sclk_period              : assert property (sclk_period);
