@@ -20,6 +20,7 @@ class spi_start_test extends spi_test;
       begin
         repeat(20) @(posedge vif.clk);
         vif.start = 1'b1;
+        vif.tx_data = 8'hDE;
         repeat(10) @(posedge vif.clk);
         vif.start = 1'b0;
       end
