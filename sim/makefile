@@ -26,16 +26,16 @@ test_list:
 
 cov:
 	verdi -cov -covdir spi_simv.vdb
+
 #merge all coverage vdb
 merge:
 	urg -full64 -metric line+tgl+cond+fsm+assert+branch+group -warn none -dbname merge_coverage_name.vdb -dir ./*.vdb
 
 cov_merged:
 	verdi -cov -covdir merge_coverage_name.vdb
-fsdb:
-	verdi -ssf spi_sim.fsdb
+
 all:
 	make run_dv test=spi_start_test
 	make run_dv test=spi_protocol_test
 	make run_dv test=spi_reset_test
-	
+

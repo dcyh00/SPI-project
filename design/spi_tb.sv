@@ -41,7 +41,7 @@ module spi_tb;
   end
 
   initial begin
-	assign spi_vif.slave_rx_data = slave_rx_data[7:0];
+    assign spi_vif.slave_rx_data = slave_rx_data[7:0];
   end
 
   initial begin
@@ -49,7 +49,15 @@ module spi_tb;
     uvm_config_db#(virtual spi_if.drv_mp)::set(null, "*drv*", "vif", spi_vif.drv_mp);
     uvm_config_db#(virtual spi_if.mon_mp)::set(null, "*mon*", "vif", spi_vif.mon_mp);
     uvm_config_db#(int)::set(null, "*", "slave_reset_response", slave_reset_response);
-    run_test();
+
+    fork
+      run_test();
+      begin
+        repeat (1000) @(posedge spi_vif.clk);
+        `uvm_error("TESTBENCH", "TEST TIMEOUT")
+        $finish;
+      end
+    join_any
   end
 
   initial begin

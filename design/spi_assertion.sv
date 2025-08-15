@@ -34,7 +34,7 @@ property cs_n_low;
 endproperty
 
 // cs_n deassert after 8sclk
-property cs_n_deassert; //All your tools and features are now in one 
+property cs_n_deassert; //All your tools and features are now in one
   @(negedge spi_vif.clk) disable iff( !spi_vif.rst_n)
   $fell(spi_vif.cs_n) |-> ##(8*SCLK_PERIOD) $rose(spi_vif.cs_n);
 endproperty
@@ -88,6 +88,12 @@ endproperty
 property busy_after_done;
   @(posedge spi_vif.clk) disable iff (!spi_vif.rst_n)
   $rose(spi_vif.done) |=> $fell(spi_vif.busy);
+endproperty
+
+//ensure mosi only chg on posedge not negedge
+property posedge_shifting;
+  @(posedge spi_vif.clk) disable iff (!spi_vif.rst_n)
+  $fell(spi_vif.sclk) |-> $stable(spi_tb.dut.mosi);
 endproperty
 
 //check sampling // add condition to prevent false assertion due to 8'hFF and 8'h00
@@ -151,8 +157,9 @@ assert_sclk_glitch_fell         : assert property(sclk_glitch_fell);
 assert_busy_after_start         : assert property(busy_after_start);
 assert_cs_n_after_start         : assert property(cs_n_after_start);
 assert_busy_after_done          : assert property(busy_after_done);
+assert_posedge_shifting         : assert property(posedge_shifting) else $display( "SHIFTING_ERROR");
 assert_negedge_sampling         : assert property(negedge_sampling) else $display( "SAMPLING_ERROR");
 assert_sclk_idle_low            : assert property(sclk_idle_low);
-assert_start_ignored            : assert property (start_ignored_when_busy);
-assert_done_after_lastbit       : assert property (done_after_lastbit);
-assert_sclk_period              : assert property (sclk_period);
+assert_start_ignored            : assert property(start_ignored_when_busy);
+assert_done_after_lastbit       : assert property(done_after_lastbit);
+assert_sclk_period              : assert property(sclk_period);
