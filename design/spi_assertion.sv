@@ -110,14 +110,10 @@ property sclk_idle_low;
 endproperty
 
 // Need to run spi_start_test.sv to verify start_ignored_when_busy
-sequence start_when_busy;
-  spi_vif.busy && spi_vif.start;
-endsequence
-
 // start ignored when busy
 property start_ignored_when_busy;
   @(posedge spi_vif.clk) disable iff (!spi_vif.rst_n)
-  start_when_busy |-> ((spi_vif.done == 0) throughout spi_vif.start);
+  (spi_vif.busy && spi_vif.start) |=> $stable(spi_tb.dut.tx_reg) throughout spi_vif.busy;
 endproperty
 
 // Check lastbit
