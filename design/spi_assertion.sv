@@ -140,6 +140,12 @@ property sclk_period;
   sclk_count_active |-> (!spi_vif.sclk) ##CLK_DIV (spi_vif.sclk) ##CLK_DIV (!spi_vif.sclk);
 endproperty
 
+// no changes from cs_n until done = 1
+property no_tran_until_done;
+	@(posedge spi_vif.clk) disable iff (!spi_vif.rst_n)
+	$rose(spi_vif.cs_n) |-> ##1 (spi_vif.cs_n == 0) until (spi_vif.done == 1);
+    endproperty
+
 assert_reset  	                : assert property(reset);
 assert_busy_high                : assert property(busy_high);
 assert_busy_deassert            : assert property(busy_deassert);
@@ -159,3 +165,4 @@ assert_sclk_idle_low            : assert property(sclk_idle_low);
 assert_start_ignored            : assert property(start_ignored_when_busy);
 assert_done_after_lastbit       : assert property(done_after_lastbit);
 assert_sclk_period              : assert property(sclk_period);
+assert_no_tran_until_done 	: assert property(no_tran_until_done);
