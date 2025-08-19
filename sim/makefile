@@ -17,6 +17,7 @@ clean:
 #usage: make dv test={ur target tst}
 run_dv:
 	${ROOT}/sim/run_sim.csh dv ${MODULE} ${test}
+	mv spi_sim.fsdb ${test}.fsdb
 
 fsdb:
 	verdi -ssf spi_sim.fsdb &
