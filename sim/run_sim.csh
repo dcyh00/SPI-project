@@ -69,15 +69,15 @@ else
     set qrun_file = ""
 endif
 if ($COVERAGE == 1) then
-    set coverage1 = "-cm line+tgl+cond+fsm+branch"
-    set coverage2 = "-cm line+tgl+cond+fsm+branch"
+    set coverage1 = "-cm line+tgl+cond+fsm+branch -cm_dir $TEST.vdb"
+    set coverage2 = "-cm line+tgl+cond+fsm+branch -cm_dir $TEST.vdb"
 else
     set coverage1 = ""
     set coverage2 = ""
 endif
 if ($ASSERT == 1) then
-    set coverage1 = "-cm line+tgl+cond+fsm+branch+assert"
-    set coverage2 = "-cm line+tgl+cond+fsm+branch+assert"
+    set coverage1 = "-cm line+tgl+cond+fsm+branch+assert -cm_dir $TEST.vdb"
+    set coverage2 = "-cm line+tgl+cond+fsm+branch+assert -cm_dir $TEST.vdb"
     set assert1 = "-assert enable_diag"
     set assert2 = "-assert summary"
 else
@@ -90,7 +90,8 @@ if ($FLIST == 1) then
         echo "[4] ERROR: Filelist $filelist not found."
         exit 1
     endif
-    set files = "-ntb_opts uvm-ieee-2020-2.0 +define+UVM_OBJECT_MUST_HAVE_CONSTRUCTOR -file $filelist -timescale=1ns/1ps $coverage1 $assert1"
+    set files = "-ntb_opts uvm-ieee-2020-2.0 +define+UVM_OBJECT_MUST_HAVE_CONSTRUCTOR -file $filelist -timescale=1ns/1ps $coverage1 $assert1 "
+    #set files = "-ntb_opts uvm +define+UVM_OBJECT_MUST_HAVE_CONSTRUCTOR -file $filelist -timescale=1ns/1ps $coverage1 $assert1"
 else
     set files = "-ntb_opts uvm-ieee-2020-2.0 +define+UVM_OBJECT_MUST_HAVE_CONSTRUCTOR +incdir+$UVM_DESIGN $VCS_HOME/etc/uvm-ieee-2020-2.0/uvm_pkg.sv $ROOT/design/$MODULE_TB.$TYPE -timescale=1ns/1ps $coverage1 $assert1"
 endif
@@ -129,7 +130,8 @@ if ($MODE == "dv") then
             echo "$command" >> $qrun_file
         endif
 
-        set command = "$MODULE\_simv -l $MODULE\_sim.log +UVM_NO_RELNOTES $coverage2 $assert2 +UVM_TESTNAME=$TEST"
+        #set command = "$MODULE\_simv -l $MODULE\_sim.log +UVM_NO_RELNOTES $coverage2 $assert2 +fsdb+sva_success/sva_vacuous +UVM_TESTNAME=$TEST"
+        set command = "$MODULE\_simv -l $MODULE\_sim.log +UVM_NO_RELNOTES $coverage2 $assert2 +fsdb+sva_success/sva_vacuous +UVM_TESTNAME=$TEST"
         echo "[==== INFO ====] $command"
         if ($NR != 1) then
             eval $command
