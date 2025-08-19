@@ -126,18 +126,13 @@ endsequence
 // done 1 clk cycle after lastbit
 property done_after_lastbit;
   @(posedge spi_vif.clk) disable iff (!spi_vif.rst_n)
-  last_bit ##4 last_bit |=>  $rose(spi_vif.done) ##1 $fell(spi_vif.done);
+  last_bit ##CLK_DIV last_bit |=>  $rose(spi_vif.done) ##1 $fell(spi_vif.done);
 endproperty
-
-// Check sclk count active
-sequence sclk_count_active;
-(!spi_vif.cs_n) && (!spi_vif.sclk);
-endsequence
 
 // Verify sclk 2*CLK_DIV clk period
 property sclk_period;
   @(posedge spi_vif.clk) disable iff (!spi_vif.rst_n)
-  sclk_count_active |-> (!spi_vif.sclk) ##CLK_DIV (spi_vif.sclk) ##CLK_DIV (!spi_vif.sclk);
+  ((!spi_vif.cs_n) && (!spi_vif.sclk)) |-> (!spi_vif.sclk) ##CLK_DIV (spi_vif.sclk) ##CLK_DIV (!spi_vif.sclk);
 endproperty
 
 // no changes from cs_n until done = 1
